@@ -1,3 +1,3 @@
 # AutoML Service
 
-Deploy a automated machine learning pipeline as a service using Flask.
+Deploy an automated machine learning pipeline as a service using Flask.
