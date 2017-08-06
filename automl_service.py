@@ -11,6 +11,7 @@ import os
 import json
 
 from flask import Flask, request, jsonify
+import numpy as np
 import pandas as pd
 import requests
 import sklearn
@@ -41,8 +42,13 @@ def serve_api():
     params = read_params(request, 'params')
     X = build_features(df, params)
     cl = classifier.cl
-    sklearn.metrics.roc_auc_score(label_test.label,
-                                  tpot.predict_proba(X_test)[:,1])
+    scores = pd.Series(cl.predict_proba(X_test)[:,1], name='scores')
+    return scores.to_json(orient='values')
+
+@app.route('/testing', methods=['POST'])
+def testing():
+    return json.dumps(np.array([1,2,3]))
+
 
 if __name__ == "__main__":
     if os.environ.get('VCAP_SERVICES') is None: # running locally
