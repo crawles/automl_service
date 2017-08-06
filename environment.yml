@@ -1,0 +1,10 @@
+name: jupyter
+dependencies:
+  - flask
+  - pandas
+  - python=2.7.11
+  - requests
+  - scikit-learn
+  - pip:
+      - gunicorn
+      - redis
