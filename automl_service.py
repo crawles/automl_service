@@ -28,11 +28,26 @@ classifier = Classifier()
 @app.route('/train_model', methods=['POST'])
 def train_api():
     df = read_file(request, 'raw_data')
-    y = read_file(request, 'labels')
+    y_train = read_file(request, 'labels')
     params = read_params(request, 'params')
-    X = build_features(df, params)
-    cl = train_model(X, y.label, params)
+
+    X_train = build_features(df, params)
+    y_train = y_train.set_index('example_id')
+    y_train = y_train.loc[X_train.index]
+    print y_train.head()
+    print '''
+
+
+
+
+
+
+    '''
+
+    cl = train_model(X_train, y_train.label, params)
     classifier.cl = cl
+    print sklearn.metrics.roc_auc_score(y_train.label,
+                                        cl.fitted_pipeline_.predict_proba(X_train)[:,1])
     return str(cl.fitted_pipeline_)
 
 
@@ -41,13 +56,11 @@ def serve_api():
     df = read_file(request, 'raw_data')
     params = read_params(request, 'params')
     X = build_features(df, params)
-    cl = classifier.cl
-    scores = pd.Series(cl.predict_proba(X_test)[:,1], name='scores')
-    return scores.to_json(orient='values')
-
-@app.route('/testing', methods=['POST'])
-def testing():
-    return json.dumps(np.array([1,2,3]))
+    scores = classifier.cl.predict_proba(X)[:,1]
+    result = pd.DataFrame(scores,
+                          columns=['score'],
+                          index=X.index)
+    return result.to_json()
 
 
 if __name__ == "__main__":
