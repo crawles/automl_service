@@ -12,6 +12,7 @@ import pandas as pd
 import yaml
 import tsfresh
 
+from sklearn.ensemble import RandomForestClassifier
 from tpot import TPOTClassifier
 from tsfresh import extract_features, extract_relevant_features,\
                     select_features
@@ -43,11 +44,10 @@ def build_features(data, params):
 
 def train_model(X, y, params):
     """Train a sklearn-learn compatible classifier using AutoML via TPOT."""
-    kwargs = params['tpot_classifier']
+    kwargs = params['model_training']['tpot_classifier']
     tpot = TPOTClassifier(**kwargs)
+    tpot = RandomForestClassifier()
     # remove this for testing, doesn't predict_proba
-    if 'sklearn.svm.LinearSVC' in tpot.config_dict:
-        del tpot.config_dict['sklearn.svm.LinearSVC']
     tpot.fit(X, y)
     return tpot
     

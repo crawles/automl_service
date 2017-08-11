@@ -35,3 +35,19 @@ def test_serve_model():
     print "Test AUC: {}".format(auc)
     assert (auc > 0.9)
     
+def test_get_models():
+    '''Show all available models'''
+    url = os.path.join(base_url, 'models')
+    r  = requests.get(url)
+    print r.json()
+
+
+def test_train_model1():
+    '''Show all available models'''
+    url = os.path.join(base_url, 'train_model1')
+    test_files = {'raw_data': open('data/data_test.json', 'rb'),
+              'params' : open('pipeline_parameters.yml', 'rb')}
+
+    r  = requests.post(url,
+            files=test_files)
+    print r.json()
