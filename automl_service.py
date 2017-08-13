@@ -20,35 +20,39 @@ import resources
 
 from flask_restful import reqparse, abort, Api, Resource
 from utilities import build_features, read_file, read_params,\
-        train_model, Classifier
+        train_model, ModelFactory
 
 
 app = Flask(__name__)
 api = Api(app)
 
-classifier = Classifier()
+model_factory = ModelFactory()
 
 
-api.add_resource(resources.Models, '/models')
-api.add_resource(resources.Train, '/train_model1')
+api.add_resource(resources.Train, '/train_model',
+    resource_class_kwargs={'model_factory': model_factory})
+api.add_resource(resources.ServePrediction, '/serve_prediction',
+    resource_class_kwargs={'model_factory': model_factory})
+api.add_resource(resources.Models, '/models',
+    resource_class_kwargs={'model_factory': model_factory})
 
 
 
-@app.route('/train_model', methods=['POST'])
-def train_api():
-    
-    df = read_file(request, 'raw_data')
-    params = read_params(request, 'params')
-    X_train = build_features(df, params)
-    y_train = read_file(request, 'labels')
-    y_train = y_train.set_index('example_id')
-    y_train = y_train.loc[X_train.index]
-
-    cl = train_model(X_train, y_train.label, params)
-    classifier.cl = cl
-    print sklearn.metrics.roc_auc_score(y_train.label,
-                                        cl.predict_proba(X_train)[:,1])
-    return str(cl)
+#@app.route('/train_model', methods=['POST'])
+#def train_api():
+#    
+#    df = read_file(request, 'raw_data')
+#    params = read_params(request, 'params')
+#    X_train = build_features(df, params)
+#    y_train = read_file(request, 'labels')
+#    y_train = y_train.set_index('example_id')
+#    y_train = y_train.loc[X_train.index]
+#
+#    cl = train_model(X_train, y_train.label, params)
+#    classifier.cl = cl
+#    print sklearn.metrics.roc_auc_score(y_train.label,
+#                                        cl.predict_proba(X_train)[:,1])
+#    return str(cl)
 
 
 @app.route('/serve_pred', methods=['POST'])

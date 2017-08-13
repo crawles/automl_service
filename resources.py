@@ -1,24 +1,97 @@
 import json
+import time
 
+import pandas as pd
+import sklearn
+import yaml
 import werkzeug
+
+from utilities import build_features, read_file, read_params,\
+    train_model
 
 from flask_restful import reqparse, Resource
 
+class Model(Resource):
+
+    def __init__(self, model_factory):
+        self.model_factory = model_factory
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('pipeline_id')
+    
+    def get(self):
+        args = self.parser.parse_args()
+        pipeline_id = args['pipeline_id']
+        pipeline = self.model_factory[pipeline_id]
+        result = dict()
+        result['model'] = pipeline['stats']
+        result['extract_features'] = pipeline['extract_features']
+        return json.dumps(result)
+
 class Models(Resource):
 
+    def __init__(self, model_factory):
+        self.model_factory = model_factory
+    
     def get(self):
-        return json.dumps({1: 'model1', 2: 'model2', 3: 'model3'})
+        model_ids = self.model_factory.pipelines.keys()
+        result = dict()
+        for m in model_ids:
+            result[m] = self.model_factory[m]['stats']
+        return json.dumps(result)
+
+
 
 class Train(Resource):
 
-    def __init__(self):
+    def __init__(self, model_factory):
+        self.model_factory = model_factory
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('params', type=werkzeug.FileStorage,
-                location='files')
+            location='files')
+        self.parser.add_argument('raw_data', type=werkzeug.FileStorage, 
+            location='files')
+        self.parser.add_argument('labels', type=werkzeug.FileStorage, 
+            location='files')
+
+    def post(self):
+        start_time = time.time()
+        args = self.parser.parse_args()
+
+        # read data
+        params = read_params(args['params'].stream)
+        df = read_file(args['raw_data'].stream.read())
+        y_train = read_file(args['labels'].stream.read())
+
+        # build features
+        X_train = build_features(df, params)
+        y_train = y_train.set_index('example_id')
+        y_train = y_train.loc[X_train.index]
+
+        # train model
+        cl = train_model(X_train, y_train.label, params)
+        self.model_factory.add_pipeline(cl, params)
+        result = {'trainTime': time.time()-start_time, 
+                  'trainShape': X_train.shape,
+                  'modelType': str(type(cl)),
+                  'modelId': params['pipeline_id']}
+        self.model_factory[params['pipeline_id']]['stats'] = result
+        return json.dumps(result)
+
+
+class ServePrediction(Resource):
+
+    def __init__(self, model_factory):
+        self.model_factory = model_factory
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('params', type=werkzeug.FileStorage,
+            location='files')
+        self.parser.add_argument('raw_data', type=werkzeug.FileStorage, 
+            location='files')
 
     def post(self):
         args = self.parser.parse_args()
-        print 111
-        print args['params'].stream
-        print 111
-        return json.dumps(args)
+        params = read_params(args['params'].stream)
+        df = read_file(args['raw_data'].stream.read())
+        result = self.model_factory.use_pipeline(df, params['pipeline_id'])
+        return result.to_json()
+

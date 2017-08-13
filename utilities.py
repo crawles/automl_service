@@ -5,15 +5,16 @@ utilities.py
 
 Utility functions for automl service.
 """
-
+import copy
 import json
 
 import pandas as pd
 import yaml
+import sklearn
+import tpot
 import tsfresh
 
 from sklearn.ensemble import RandomForestClassifier
-from tpot import TPOTClassifier
 from tsfresh import extract_features, extract_relevant_features,\
                     select_features
 from tsfresh.utilities.dataframe_functions import impute
@@ -21,17 +22,16 @@ from tsfresh.feature_extraction import ComprehensiveFCParameters,\
                                        MinimalFCParameters
 
 
-def read_file(request, fkey):
+#TODO: change name to load json
+def read_file(d):
     """Given an input file, we want to read, parse, and load it 
     into a Pandas DataFrame"""
-    d = request.files[fkey].read()
     j = json.loads(d)
     df = pd.DataFrame(j)
     return df
 
-def read_params(request, fkey):
+def read_params(d):
     """Parse parameter file"""
-    d = request.files[fkey].read()
     return yaml.load(d)
 
 def build_features(data, params):
@@ -43,19 +43,47 @@ def build_features(data, params):
     return extract_features(data, **kwargs)
 
 def train_model(X, y, params):
-    """Train a sklearn-learn compatible classifier using AutoML via TPOT."""
-    kwargs = params['model_training']['tpot_classifier']
-    tpot = TPOTClassifier(**kwargs)
-    tpot = RandomForestClassifier()
-    # remove this for testing, doesn't predict_proba
-    tpot.fit(X, y)
-    return tpot
+    """Train a sklearn-learn compatible classifier ."""
+    model_params = params['model_training']
+    python_objects = ['model']
+    for k in python_objects:
+        model_params[k] = eval(model_params[k])
+    model = model_params['model']
+    kwargs = model_params['model_args']
+    if kwargs:
+        cl = model(**kwargs)
+    else:
+        cl = model()
+    cl.fit(X, y)
+    return cl
     
 
-class Classifier(object):
+class ModelFactory(object):
 
     def __init__(self):
+        self.pipelines = dict()
         self.cl = None
+
+    def __getitem__(self, item):
+        return self.pipelines[item]
+
+    def add_pipeline(self, cl, params):
+        pipeline_id = params['pipeline_id']
+        self.pipelines[pipeline_id] = dict()
+        pipeline = self.pipelines[pipeline_id]
+        pipeline['extract_features'] = params['extract_features']
+        pipeline['model'] = cl
+
+    def use_pipeline(self, df, pipeline_id): 
+        params = self.pipelines[pipeline_id]
+        X = extract_features(df, **params['extract_features'])
+        cl = params['model']
+        scores = cl.predict_proba(X)[:,1]
+        result = pd.DataFrame(scores,
+                              columns=['score'],
+                              index=X.index)
+        return result
+        
 
 def load_module_from_string(module_name):
     __import__(module_name)

@@ -1,0 +1,12 @@
+pipeline_id: 2
+model_training:
+  model_args:
+    generations: 20
+    population_size: 10 
+    verbosity: 2
+    max_time_mins: 0.1
+  model: tpot.TPOTClassifier
+extract_features:
+  column_id: example_id
+  impute_function: tsfresh.utilities.dataframe_functions.impute
+  default_fc_parameters: MinimalFCParameters()
