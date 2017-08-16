@@ -1,3 +1,7 @@
+extract_features:
+  column_id: example_id
+  impute_function: tsfresh.utilities.dataframe_functions.impute
+  default_fc_parameters: MinimalFCParameters()
 model_training:
   model_id: 1
   tpot_classifier:
@@ -5,7 +9,4 @@ model_training:
     population_size: 10 
     verbosity: 2
     max_time_mins: 0.1
-extract_features:
-  column_id: example_id
-  impute_function: tsfresh.utilities.dataframe_functions.impute
-  default_fc_parameters: MinimalFCParameters()
+

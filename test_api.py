@@ -14,26 +14,26 @@ else:                                       # running on CF
     base_url = "TBD"
 
 
-#def test_train_model_1():
-#    '''Show all available models'''
-#    url = os.path.join(base_url, 'train_model')
-#    train_files = {'raw_data': open('data/data_train.json', 'rb'),
-#                   'labels' : open('data/label_train.json', 'rb'),
-#                   'params' : open('train_parameters.yml', 'rb')}
-#    r  = requests.post(url,
-#            files=train_files)
-#    pprint.pprint(r.json())
-#
-#def test_train_model_2():
-#    '''Show all available models'''
-#    url = os.path.join(base_url, 'train_model')
-#    train_files = {'raw_data': open('data/data_train.json', 'rb'),
-#                   'labels' : open('data/label_train.json', 'rb'),
-#                   'params' : open('train_parameters_model2.yml', 'rb')}
-#    r  = requests.post(url,
-#            files=train_files)
-#    pprint.pprint(r.json())
-#
+def test_train_model_1():
+    '''Show all available models'''
+    url = os.path.join(base_url, 'train_model')
+    train_files = {'raw_data': open('data/data_train.json', 'rb'),
+                   'labels' : open('data/label_train.json', 'rb'),
+                   'params' : open('train_parameters.yml', 'rb')}
+    r  = requests.post(url,
+            files=train_files)
+    pprint.pprint(r.json())
+
+def test_train_model_2():
+    '''Show all available models'''
+    url = os.path.join(base_url, 'train_model')
+    train_files = {'raw_data': open('data/data_train.json', 'rb'),
+                   'labels' : open('data/label_train.json', 'rb'),
+                   'params' : open('train_parameters_model2.yml', 'rb')}
+    r  = requests.post(url,
+            files=train_files)
+    pprint.pprint(r.json())
+
 
 def test_serve_model():
     serve_url = os.path.join(base_url, 'serve_prediction')
@@ -65,13 +65,13 @@ def test_serve_model_2():
     print "Test AUC: {}".format(auc)
     assert (auc > 0.9)
 
-#TODO: change everything to pipeline
-def test_get_a_model():
-    '''Get a model'''
-    url = os.path.join(base_url, 'model')
-    r  = requests.get(url, data={'pipeline_id': 1})
-    pprint.pprint(r.json())
-    assert r.status_code == 200
+##TODO: change everything to pipeline
+#def test_get_a_model():
+#    '''Get a model'''
+#    url = os.path.join(base_url, 'model')
+#    r  = requests.get(url, data={'pipeline_id': 1})
+#    pprint.pprint(r.json())
+#    assert r.status_code == 200
 
 def test_get_models():
     '''Show all available models'''

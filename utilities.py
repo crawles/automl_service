@@ -57,6 +57,13 @@ def train_model(X, y, params):
     cl.fit(X, y)
     return cl
     
+def cross_validate(cl, X_train, y_train):
+    scoring = ['roc_auc', 'accuracy']
+    cv = sklearn.model_selection.cross_validate(cl, X_train, y_train,
+                                                cv=5, scoring=scoring)
+    mean_accuracy = cv['test_accuracy'].mean()
+    mean_roc_auc = cv['test_roc_auc'].mean()
+    return (mean_accuracy, mean_roc_auc)
 
 class ModelFactory(object):
 

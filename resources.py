@@ -3,10 +3,11 @@ import time
 
 import pandas as pd
 import sklearn
+import tpot
 import yaml
 import werkzeug
 
-from utilities import build_features, read_file, read_params,\
+from utilities import build_features, cross_validate, read_file, read_params,\
     train_model
 
 from flask_restful import reqparse, Resource
@@ -70,10 +71,20 @@ class Train(Resource):
         # train model
         cl = train_model(X_train, y_train.label, params)
         self.model_factory.add_pipeline(cl, params)
+        if isinstance(cl, tpot.TPOTClassifier):
+            final_classifier = cl.fitted_pipeline_
+        else:
+            final_classifier = cl
+        model_type = str(final_classifier)
+        mean_accuracy, mean_roc_auc = cross_validate(final_classifier,
+                                                     X_train,
+                                                     y_train.label)
         result = {'trainTime': time.time()-start_time, 
                   'trainShape': X_train.shape,
-                  'modelType': str(type(cl)),
-                  'modelId': params['pipeline_id']}
+                  'modelType': model_type,
+                  'modelId': params['pipeline_id'],
+                  'mean_cv_accuracy' : mean_accuracy,
+                  'mean_cv_roc_auc'  : mean_roc_auc}
         self.model_factory[params['pipeline_id']]['stats'] = result
         return json.dumps(result)
 

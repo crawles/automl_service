@@ -1,8 +1,8 @@
 pipeline_id: 1
-model_training:
-  model_args:
-  model: sklearn.ensemble.RandomForestClassifier
 extract_features:
   column_id: example_id
   impute_function: tsfresh.utilities.dataframe_functions.impute
   default_fc_parameters: MinimalFCParameters()
+model_training:
+  model_args:
+  model: sklearn.ensemble.RandomForestClassifier
