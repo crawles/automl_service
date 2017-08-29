@@ -67,6 +67,7 @@ def serve_api():
     return result.to_json()
 
 
+# note: not used if using gunicorn
 if __name__ == "__main__":
     if os.environ.get('VCAP_SERVICES') is None: # running locally
         PORT = 8080
