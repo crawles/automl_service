@@ -8,15 +8,14 @@ import requests
 
 from sklearn.metrics import roc_auc_score
 
-if os.environ.get('VCAP_SERVICES') is None: # running locally
-    base_url = "http://0.0.0.0:8080"
-else:                                       # running on CF
-    base_url = "TBD"
+#if os.environ.get('VCAP_SERVICES') is None: # running locally
+#    host = "http://0.0.0.0:8080"
+#else:                                       # running on CF
+#    host = "TBD"
 
-
-def test_train_model_1():
+def test_train_model_1(host):
     '''Show all available models'''
-    url = os.path.join(base_url, 'train_model')
+    url = os.path.join(host, 'train_model')
     train_files = {'raw_data': open('data/data_train.json', 'rb'),
                    'labels' : open('data/label_train.json', 'rb'),
                    'params' : open('train_parameters.yml', 'rb')}
@@ -24,9 +23,9 @@ def test_train_model_1():
             files=train_files)
     pprint.pprint(r.json())
 
-def test_train_model_2():
+def test_train_model_2(host):
     '''Show all available models'''
-    url = os.path.join(base_url, 'train_model')
+    url = os.path.join(host, 'train_model')
     train_files = {'raw_data': open('data/data_train.json', 'rb'),
                    'labels' : open('data/label_train.json', 'rb'),
                    'params' : open('train_parameters_model2.yml', 'rb')}
@@ -35,8 +34,8 @@ def test_train_model_2():
     pprint.pprint(r.json())
 
 
-def test_serve_model():
-    serve_url = os.path.join(base_url, 'serve_prediction')
+def test_serve_model(host):
+    serve_url = os.path.join(host, 'serve_prediction')
     test_files = {'raw_data': open('data/data_test.json', 'rb'),
                   'params' : open('test_parameters.yml', 'rb')}
     r  = requests.post(serve_url, files=test_files)
@@ -50,8 +49,8 @@ def test_serve_model():
     print "Test AUC: {}".format(auc)
     assert (auc > 0.9)
     
-def test_serve_model_2():
-    serve_url = os.path.join(base_url, 'serve_prediction')
+def test_serve_model_2(host):
+    serve_url = os.path.join(host, 'serve_prediction')
     test_files = {'raw_data': open('data/data_test.json', 'rb'),
                   'params' : open('test_parameters_model2.yml', 'rb')}
     r  = requests.post(serve_url, files=test_files)
@@ -68,14 +67,14 @@ def test_serve_model_2():
 ##TODO: change everything to pipeline
 #def test_get_a_model():
 #    '''Get a model'''
-#    url = os.path.join(base_url, 'model')
+#    url = os.path.join(host, 'model')
 #    r  = requests.get(url, data={'pipeline_id': 1})
 #    pprint.pprint(r.json())
 #    assert r.status_code == 200
 
-def test_get_models():
+def test_get_models(host):
     '''Show all available models'''
-    url = os.path.join(base_url, 'models')
+    url = os.path.join(host, 'models')
     r  = requests.get(url)
     assert r.status_code == 200
     pprint.pprint(r.json())
