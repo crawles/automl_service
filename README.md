@@ -1,11 +1,11 @@
 # AutoML Service
 
-Deploy an automated machine learning (AutoML) pipeline as a service using Flask, for both pipeline training and pipeline serving. 
+Deploy an automated machine learning (AutoML) pipeline as a service using `Flask`, for both pipeline training and pipeline serving. 
 
-The framework implements a fully automated time series classification pipeline, automating both feature engineering and model selection and optimization using Python libraries, TPOT and tsfresh.
+The framework implements a fully automated time series classification pipeline, automating both feature engineering and model selection and optimization using Python libraries, `TPOT` and `tsfresh`.
 
 <p>
-  <img src="/img/architecture.png?raw=true" width = 75%>
+  <img src="/img/architecture.png?raw=true" width = 55%>
 </p>
 
 Resources:
@@ -16,10 +16,10 @@ Resources:
 ## Training and serving a model
 
 <p>
-  <img src="/img/training.png?raw=true" width = 75%>
+  <img src="/img/training.png?raw=true" width = 55%>
 </p>
 <p>
-  <img src="/img/serving.png?raw=true" width = 75%>
+  <img src="/img/serving.png?raw=true" width = 55%>
 </p>
 
 ## Running the tests
@@ -41,7 +41,7 @@ py.test --host http://automl.cfapps.pez.pivotal.io
 For production, I would suggest splitting training and serving into seperate applications. Also it would be best to use a shared cache such as Redis or Pivotal Cloud Cache to allow other applications and multiple instances of the pipeline to access the trained model. Here is a potential architecture.
 
 <p>
-  <img src="/img/cloud_architecture.png?raw=true" width = 75%>
+  <img src="/img/cloud_architecture.png?raw=true" width = 55%>
 </p>
 
 ## Author
