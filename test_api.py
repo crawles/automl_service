@@ -15,7 +15,7 @@ from sklearn.metrics import roc_auc_score
 
 def test_train_model_1(host):
     '''Show all available models'''
-    url = os.path.join(host, 'train_model')
+    url = os.path.join(host, 'train_pipeline')
     train_files = {'raw_data': open('data/data_train.json', 'rb'),
                    'labels' : open('data/label_train.json', 'rb'),
                    'params' : open('train_parameters.yml', 'rb')}
@@ -25,7 +25,7 @@ def test_train_model_1(host):
 
 def test_train_model_2(host):
     '''Show all available models'''
-    url = os.path.join(host, 'train_model')
+    url = os.path.join(host, 'train_pipeline')
     train_files = {'raw_data': open('data/data_train.json', 'rb'),
                    'labels' : open('data/label_train.json', 'rb'),
                    'params' : open('train_parameters_model2.yml', 'rb')}

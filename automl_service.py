@@ -29,7 +29,7 @@ api = Api(app)
 model_factory = ModelFactory()
 
 
-api.add_resource(resources.Train, '/train_model',
+api.add_resource(resources.Train, '/train_pipeline',
     resource_class_kwargs={'model_factory': model_factory})
 api.add_resource(resources.ServePrediction, '/serve_prediction',
     resource_class_kwargs={'model_factory': model_factory})
@@ -38,7 +38,7 @@ api.add_resource(resources.Models, '/models',
 
 
 
-#@app.route('/train_model', methods=['POST'])
+#@app.route('/train_pipeline', methods=['POST'])
 #def train_api():
 #    
 #    df = read_file(request, 'raw_data')
