@@ -14,7 +14,7 @@ from sklearn.metrics import roc_auc_score
 #    host = "TBD"
 
 def test_train_model_1(host):
-    '''Show all available models'''
+    '''Train sklearn model'''
     url = os.path.join(host, 'train_pipeline')
     train_files = {'raw_data': open('data/data_train.json', 'rb'),
                    'labels' : open('data/label_train.json', 'rb'),
@@ -24,7 +24,7 @@ def test_train_model_1(host):
     pprint.pprint(r.json())
 
 def test_train_model_2(host):
-    '''Show all available models'''
+    '''Train TPOT model'''
     url = os.path.join(host, 'train_pipeline')
     train_files = {'raw_data': open('data/data_train.json', 'rb'),
                    'labels' : open('data/label_train.json', 'rb'),
@@ -41,7 +41,7 @@ def test_serve_model(host):
     r  = requests.post(serve_url, files=test_files)
 
     # parse result
-    result = pd.read_json(r.json())
+    result = pd.read_json(r.json()).set_index('id')
     result.index = result.index.astype(np.int)
     label_test = pd.read_json('data/label_test.json')
     result = result.loc[label_test.example_id]
@@ -56,7 +56,7 @@ def test_serve_model_2(host):
     r  = requests.post(serve_url, files=test_files)
 
     # parse result
-    result = pd.read_json(r.json())
+    result = pd.read_json(r.json()).set_index('id')
     result.index = result.index.astype(np.int)
     label_test = pd.read_json('data/label_test.json')
     result = result.loc[label_test.example_id]

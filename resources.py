@@ -65,7 +65,6 @@ class Train(Resource):
 
         # build features
         X_train = build_features(df, params)
-        print X_train
         y_train = y_train.set_index('example_id')
         y_train = y_train.loc[X_train.index]
 
