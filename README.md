@@ -4,23 +4,33 @@ Deploy an automated machine learning (AutoML) pipeline as a service using `Flask
 
 The framework implements a fully automated time series classification pipeline, automating both feature engineering and model selection and optimization using Python libraries, `TPOT` and `tsfresh`.
 
+
 <p>
-  <img src="/img/architecture.png?raw=true" width = 55%>
+  <img src="https://github.com/crawles/Logos/blob/master/automl.gif?raw=true" width = 80%>
 </p>
+
 
 Resources:
 
 - [TPOT](https://github.com/rhiever/tpot)– Automated feature preprocessing and model optimization tool
 - [tsfresh](https://github.com/blue-yonder/tsfresh)– Automated time series feature engineering and selection
  
-## Training and serving a model
+## Architecture
+
+<p>
+  <img src="/img/architecture.png?raw=true" width = 55%>
+</p>
+
+An automated pipeline for time-series classification.
 
 <p>
   <img src="/img/training.png?raw=true" width = 55%>
 </p>
+The model training logic is exposed as a REST endpoint. Raw, labeled training data is uploaded via a POST request and an optimal model is developed.
 <p>
   <img src="/img/serving.png?raw=true" width = 55%>
 </p>
+Raw training data is uploaded via a POST request and a model prediction is returned.
 
 ## Running the tests
 
@@ -47,4 +57,5 @@ For production, I would suggest splitting training and serving into seperate app
 ## Author
 
 `Chris Rawles`
+
 
