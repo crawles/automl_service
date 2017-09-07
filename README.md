@@ -1,6 +1,6 @@
 # AutoML Service
 
-Deploy an automated machine learning (AutoML) pipeline as a service using `Flask`, for both pipeline training and pipeline serving. 
+Deploy an automated machine learning (AutoML) as a service using `Flask`, for both pipeline training and pipeline serving. 
 
 The framework implements a fully automated time series classification pipeline, automating both feature engineering and model selection and optimization using Python libraries, `TPOT` and `tsfresh`.
 
@@ -53,6 +53,7 @@ For production, I would suggest splitting training and serving into seperate app
 <p>
   <img src="/img/cloud_architecture.png?raw=true" width = 55%>
 </p>
+A scalable model training and model serving architecture.
 
 ## Author
 
