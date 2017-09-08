@@ -63,15 +63,15 @@ result_df = json.loads(r_train.json())
 ```
 
 ```python
-{'featureEngParams': ...,
-                       'default_fc_parameters': "['median', 'minimum', 'standard_deviation', 'sum_values', 'variance', 'maximum', 'length', 'mean']",
-                       'impute_function': 'impute'},
- 'mean_cv_accuracy': 0.8657709087314693,
- 'mean_cv_roc_auc': 0.9321025779213103,
+{'featureEngParams': {'default_fc_parameters': "['median', 'minimum', 'standard_deviation', 'sum_values', 'variance', 'maximum', 'length', 'mean']",
+                      'impute_function': 'impute',
+                      ...},
+ 'mean_cv_accuracy': 0.865,
+ 'mean_cv_roc_auc': 0.932,
  'modelId': 1,
  'modelType': "RandomForestClassifier(...)",
  'trainShape': [1647, 8],
- 'trainTime': 1.9534740447998047}
+ 'trainTime': 1.953}
  ```
 
 Serve pipeline predictions:
