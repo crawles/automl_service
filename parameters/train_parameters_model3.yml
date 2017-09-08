@@ -1,10 +1,10 @@
 pipeline_id: 2
 model_training:
   model_args:
-    generations: 20
-    population_size: 10 
+    generations: 300
+    population_size: 50 
     verbosity: 2
-    max_time_mins: 5
+    max_time_mins: 80
   model: tpot.TPOTClassifier
 extract_features:
   column_id: example_id

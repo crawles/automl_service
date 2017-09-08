@@ -55,7 +55,7 @@ Train a pipeline:
 train_url = 'http://0.0.0.0:8080/train_pipeline'
 train_files = {'raw_data': open('data/data_train.json', 'rb'),
                'labels'  : open('data/label_train.json', 'rb'),
-               'params'  : open('train_parameters.yml', 'rb')}
+               'params'  : open('parameters/train_parameters.yml', 'rb')}
 
 # post request to train pipeline
 r_train = requests.post(train_url, files=train_files)
@@ -63,13 +63,16 @@ result_df = json.loads(r_train.json())
 ```
 
 ```python
-{'featureEngParams': {'default_fc_parameters': "['median', 'minimum', 'standard_deviation', 'sum_values', 'variance', 'maximum', 'length', 'mean']",
+{'featureEngParams': {'default_fc_parameters': "['median', 'minimum', 'standard_deviation', 
+                                                 'sum_values', 'variance', 'maximum', 
+                                                 'length', 'mean']",
                       'impute_function': 'impute',
                       ...},
  'mean_cv_accuracy': 0.865,
  'mean_cv_roc_auc': 0.932,
  'modelId': 1,
- 'modelType': "RandomForestClassifier(...)",
+ 'modelType': "Pipeline(steps=[('stackingestimator', StackingEstimator(estimator=LinearSVC(...))),
+                               ('logisticregression', LogisticRegressionClassifier(solver='liblinear',...))])"
  'trainShape': [1647, 8],
  'trainTime': 1.953}
  ```
@@ -78,7 +81,7 @@ Serve pipeline predictions:
 ```python
 serve_url = 'http://0.0.0.0:8080/serve_prediction'
 test_files = {'raw_data': open('data/data_test.json', 'rb'),
-              'params' : open('test_parameters_model2.yml', 'rb')}
+              'params' : open('parameters/test_parameters_model2.yml', 'rb')}
 
 # post request to serve predictions from trained pipeline
 r_test  = requests.post(serve_url, files=test_files)

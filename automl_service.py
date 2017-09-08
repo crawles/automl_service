@@ -36,37 +36,6 @@ api.add_resource(resources.ServePrediction, '/serve_prediction',
 api.add_resource(resources.Models, '/models',
     resource_class_kwargs={'model_factory': model_factory})
 
-
-
-#@app.route('/train_pipeline', methods=['POST'])
-#def train_api():
-#    
-#    df = read_file(request, 'raw_data')
-#    params = read_params(request, 'params')
-#    X_train = build_features(df, params)
-#    y_train = read_file(request, 'labels')
-#    y_train = y_train.set_index('example_id')
-#    y_train = y_train.loc[X_train.index]
-#
-#    cl = train_model(X_train, y_train.label, params)
-#    classifier.cl = cl
-#    print sklearn.metrics.roc_auc_score(y_train.label,
-#                                        cl.predict_proba(X_train)[:,1])
-#    return str(cl)
-
-
-@app.route('/serve_pred', methods=['POST'])
-def serve_api():
-    df = read_file(request, 'raw_data')
-    params = read_params(request, 'params')
-    X = build_features(df, params)
-    scores = classifier.cl.predict_proba(X)[:,1]
-    result = pd.DataFrame(scores,
-                          columns=['score'],
-                          index=X.index)
-    return result.to_json()
-
-
 # note: not used if using gunicorn
 if __name__ == "__main__":
     if os.environ.get('VCAP_SERVICES') is None: # running locally
