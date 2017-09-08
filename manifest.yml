@@ -5,4 +5,4 @@ applications:
   disk_quota: 2GB
   instances: 1
   buildpack: https://github.com/cloudfoundry/python-buildpack.git
-  command: gunicorn --bind 0.0.0.0:$PORT automl_service:app
+  command: gunicorn --bind 0.0.0.0:$PORT -t 0 automl_service:app
