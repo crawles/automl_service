@@ -34,16 +34,16 @@ The model training logic is exposed as a REST endpoint. Raw, labeled training da
 Raw training data is uploaded via a POST request and a model prediction is returned.
 
 ## Using the app
+View the [Jupyter Notebook](https://github.com/crawles/automl_service/blob/master/modelling_and_usage.ipynb) for an example.
 ### Deploying
 
-View the [Jupyter Notebook](https://github.com/crawles/automl_service/blob/master/modelling_and_usage.ipynb) for an example.
 
-```
+```bash
 # deploy locally
 gunicorn --bind 0.0.0.0:8080 -t 0 automl_service:app
 ```
 
-```
+```bash
 # deploy on cloud foundry
 cf push
 ```
@@ -51,7 +51,7 @@ cf push
 
 Train a pipeline:
 
-```
+```python
 train_url = 'http://0.0.0.0:8080/train_pipeline'
 train_files = {'raw_data': open('data/data_train.json', 'rb'),
                'labels'  : open('data/label_train.json', 'rb'),
@@ -62,20 +62,20 @@ r_train = requests.post(train_url, files=train_files)
 result_df = json.loads(r_train.json())
 ```
 
-```
-{u'featureEngParams': ...,
-                       u'default_fc_parameters': u"['median', 'minimum', 'standard_deviation', 'sum_values', 'variance', 'maximum', 'length', 'mean']",
-                       u'impute_function': u'impute'},
- u'mean_cv_accuracy': 0.8657709087314693,
- u'mean_cv_roc_auc': 0.9321025779213103,
- u'modelId': 1,
- u'modelType': u"RandomForestClassifier(...)",
- u'trainShape': [1647, 8],
- u'trainTime': 1.9534740447998047}
+```python
+{'featureEngParams': ...,
+                       'default_fc_parameters': u"['median', 'minimum', 'standard_deviation', 'sum_values', 'variance', 'maximum', 'length', 'mean']",
+                       'impute_function': u'impute'},
+ 'mean_cv_accuracy': 0.8657709087314693,
+ 'mean_cv_roc_auc': 0.9321025779213103,
+ 'modelId': 1,
+ 'modelType': u"RandomForestClassifier(...)",
+ 'trainShape': [1647, 8],
+ 'trainTime': 1.9534740447998047}
  ```
 
 Serve pipeline predictions:
-```
+```python
 serve_url = 'http://0.0.0.0:8080/serve_prediction'
 test_files = {'raw_data': open('data/data_test.json', 'rb'),
               'params' : open('test_parameters_model2.yml', 'rb')}
@@ -96,8 +96,8 @@ result = pd.read_json(r_test.json()).set_index('id')
 
 View all trained models:
 
-```
-r=requests.get('http://0.0.0.0:8080/models')
+```python
+r = requests.get('http://0.0.0.0:8080/models')
 pipelines = json.loads(r.json())
 ```
 
@@ -105,12 +105,12 @@ pipelines = json.loads(r.json())
 
 Supply a user argument for the host.
 
-```
+```bash
 # use local app
 py.test --host http://0.0.0.0:8080
 ```
 
-```
+```bash
 # use cloud-deployed app
 py.test --host http://ROUTE-HERE
 ```
