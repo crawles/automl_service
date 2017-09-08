@@ -40,7 +40,7 @@ View the [Jupyter Notebook](https://github.com/crawles/automl_service/blob/maste
 
 ```bash
 # deploy locally
-gunicorn --bind 0.0.0.0:8080 -t 0 automl_service:app
+python automl_service.py
 ```
 
 ```bash
@@ -64,12 +64,12 @@ result_df = json.loads(r_train.json())
 
 ```python
 {'featureEngParams': ...,
-                       'default_fc_parameters': u"['median', 'minimum', 'standard_deviation', 'sum_values', 'variance', 'maximum', 'length', 'mean']",
-                       'impute_function': u'impute'},
+                       'default_fc_parameters': "['median', 'minimum', 'standard_deviation', 'sum_values', 'variance', 'maximum', 'length', 'mean']",
+                       'impute_function': 'impute'},
  'mean_cv_accuracy': 0.8657709087314693,
  'mean_cv_roc_auc': 0.9321025779213103,
  'modelId': 1,
- 'modelType': u"RandomForestClassifier(...)",
+ 'modelType': "RandomForestClassifier(...)",
  'trainShape': [1647, 8],
  'trainTime': 1.9534740447998047}
  ```
@@ -99,6 +99,22 @@ View all trained models:
 ```python
 r = requests.get('http://0.0.0.0:8080/models')
 pipelines = json.loads(r.json())
+```
+
+```python
+{'1':
+    {'mean_cv_accuracy': 0.873,
+     'modelType': "RandomForestClassifier(...),
+     ...},
+ '2':
+    {'mean_cv_accuracy': 0.895,
+     'modelType': "GradientBoostingClassifier(...),
+     ...},
+ '3':
+    {'mean_cv_accuracy': 0.859,
+     'modelType': "LogisticRegressionClassifier(...),
+     ...},
+...}
 ```
 
 ## Running the tests
