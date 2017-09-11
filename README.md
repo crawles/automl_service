@@ -4,11 +4,9 @@ Deploy automated machine learning (AutoML) as a service using `Flask`, for both 
 
 The framework implements a fully automated time series classification pipeline, automating both feature engineering and model selection and optimization using Python libraries, `TPOT` and `tsfresh`.
 
-
 <p>
   <img src="https://github.com/crawles/Logos/blob/master/automl.gif?raw=true" width = 80%>
 </p>
-
 
 Resources:
 
@@ -17,6 +15,10 @@ Resources:
 - [Flask](http://flask.pocoo.org/)– A web development microframework for Python
  
 ## Architecture
+
+The application exposes both model training and model predictions with a RESTful API. For model training, input data and labels are sent via POST request, a pipeline is trained, and model predictions are accessible via a prediction route.
+
+Pipelines are stored to a unique key, and thus, live predictions can be made on the same data using different feature construction and modeling pipelines.
 
 <p>
   <img src="/img/architecture.png?raw=true" width = 55%>
