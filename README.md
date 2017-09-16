@@ -59,7 +59,7 @@ Train a pipeline:
 train_url = 'http://0.0.0.0:8080/train_pipeline'
 train_files = {'raw_data': open('data/data_train.json', 'rb'),
                'labels'  : open('data/label_train.json', 'rb'),
-               'params'  : open('parameters/train_parameters.yml', 'rb')}
+               'params'  : open('parameters/train_parameters_model2.yml', 'rb')}
 
 # post request to train pipeline
 r_train = requests.post(train_url, files=train_files)
