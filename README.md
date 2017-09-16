@@ -65,7 +65,7 @@ train_files = {'raw_data': open('data/data_train.json', 'rb'),
 r_train = requests.post(train_url, files=train_files)
 result_df = json.loads(r_train.json())
 ```
-
+returns:
 ```python
 {'featureEngParams': {'default_fc_parameters': "['median', 'minimum', 'standard_deviation', 
                                                  'sum_values', 'variance', 'maximum', 
